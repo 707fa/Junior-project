@@ -6,7 +6,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
 import PersonIcon from "@mui/icons-material/Person";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
 import Header from "@/components/Header";
 import { api } from "@/lib/api";
@@ -34,7 +34,7 @@ export default function TransferPage() {
     amount: "",
     currency: "UZS",
   });
-  const searchParams = useSearchParams();
+
   const [receiverName, setReceiverName] = useState<string | null>(null);
   const [cardType, setCardType] = useState<string | null>(null);
   const [isCheckingCard, setIsCheckingCard] = useState(false);
@@ -71,13 +71,13 @@ export default function TransferPage() {
     loadCards();
     
     // Handle query param 'to' for QR scan or external link
-    const toCard = searchParams.get("to");
+    const params = new URLSearchParams(window.location.search);
+    const toCard = params.get("to");
     if (toCard) {
       setReceiverMode("manual");
       setFormData(prev => ({ ...prev, receiverCardManual: toCard }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, []);
 
   const receiverCards = cards.filter(c => c.number !== formData.senderCard);
 
